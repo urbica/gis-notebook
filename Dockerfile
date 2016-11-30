@@ -42,7 +42,7 @@ RUN conda install --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
   'pyproj' \
   'rtree' \
   'shapely' \
-  && conda install --quiet --yes -c auto googlemaps \
-  && conda install --quiet --yes -c terradue geocoder \
+  && conda install -n python2 --quiet --yes -c auto googlemaps \
+  && conda install -n python2 --quiet --yes -c terradue geocoder \
   && conda remove -n python2 --quiet --yes --force qt pyqt && \
   conda clean -tipsy
