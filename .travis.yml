@@ -1,0 +1,13 @@
+language: bash
+
+sudo: required
+
+services:
+  - docker
+
+install:
+  - docker build -t gis-notebook .
+  - docker run -d -p 127.0.0.1:8888:8888 --name gis-notebook gis-notebook
+
+script:
+  - docker ps | grep -q gis-notebook
