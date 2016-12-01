@@ -9,40 +9,21 @@ RUN apt-get -yqq update \
 
 USER $NB_USER
 
-# RUN conda config --add channels http://conda.anaconda.org/auto \
-#   && conda config --add channels http://conda.anaconda.org/terradue \
-#   && conda config --add channels http://conda.anaconda.org/conda-forge
-
-# # Install Python 3 packages
-# RUN conda install --quiet --yes \
-#   'fiona' \
-#   'gdal' \
-#   'geocoder' \
-#   'geopandas' \
-#   'geopy' \
-#   'googlemaps' \
-#   'psycopg2' \
-#   'pyproj' \
-#   'rtree' \
-#   'shapely' \
-#   && conda install --quiet --yes -c auto googlemaps \
-#   && conda install --quiet --yes -c terradue geocoder \
-#   && conda remove --quiet --yes --force qt pyqt && \
-#   conda clean -tipsy
+RUN conda config --add channels http://conda.anaconda.org/auto \
+  && conda config --add channels http://conda.anaconda.org/terradue \
+  && conda config --add channels http://conda.anaconda.org/conda-forge
 
 # Install Python 2 packages
 RUN conda install --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
   'fiona' \
   'gdal' \
-  # 'geocoder' \
+  'geocoder' \
   'geopandas' \
   'geopy' \
-  # 'googlemaps' \
+  'googlemaps' \
   'psycopg2' \
   'pyproj' \
   'rtree' \
   'shapely' \
-  && conda install -n python2 --quiet --yes -c auto googlemaps \
-  && conda install -n python2 --quiet --yes -c terradue geocoder \
   && conda remove -n python2 --quiet --yes --force qt pyqt && \
   conda clean -tipsy
