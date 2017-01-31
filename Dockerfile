@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook
+FROM jupyter/scipy-notebook:latest
 MAINTAINER Stepan Kuzmin <to.stepan.kuzmin@gmail.com>
 
 USER root
@@ -23,6 +23,7 @@ RUN conda install --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
   'googlemaps' \
   'psycopg2' \
   'pyproj' \
+  'pysal' \
   'rtree' \
   'shapely' \
   && conda remove -n python2 --quiet --yes --force qt pyqt && \
