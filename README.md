@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/urbica/gis-notebook.svg?branch=master)](https://travis-ci.org/urbica/gis-notebook)
 ![Docker pulls](https://img.shields.io/docker/pulls/urbica/gis-notebook.svg)
 ![Docker stars](https://img.shields.io/docker/stars/urbica/gis-notebook.svg)
-![Metadata](https://images.microbadger.com/badges/image/urbica/gis-notebook.svg)](https://microbadger.com/images/urbica/gis-notebook)
+[![Metadata](https://images.microbadger.com/badges/image/urbica/gis-notebook.svg)](https://microbadger.com/images/urbica/gis-notebook)
 
 # Jupyter Notebook Python GIS Stack
 
