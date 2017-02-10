@@ -12,7 +12,7 @@ This image is based on [Jupyter Notebook Scientific Python Stack](https://github
 * Jupyter Notebook 4.3.x
 * Conda Python 3.x and Python 2.7.x environments
 * pandas, matplotlib, scipy, seaborn, scikit-learn, scikit-image, sympy, cython, patsy, statsmodel, cloudpickle, dill, numba, bokeh, vincent, beautifulsoup, xlrd pre-installed
-* fiona, gdal, geocoder, geopandas, geopy, googlemaps, psycopg2, pyproj, pysal, rtree, shapely pre-installed
+* fiona, folium, gdal, geocoder, geopandas, geopy, googlemaps, psycopg2, pyproj, pysal, rtree, shapely pre-installed
 * Unprivileged user `jovyan` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/jovyan` and `/opt/conda`
 * [tini](https://github.com/krallin/tini) as the container entrypoint and [start-notebook.sh](../base-notebook/start-notebook.sh) as the default command
 * A [start-singleuser.sh](../base-notebook/start-singleuser.sh) script useful for running a single-user instance of the Notebook server, as required by JupyterHub

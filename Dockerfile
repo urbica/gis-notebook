@@ -16,6 +16,7 @@ RUN conda config --add channels http://conda.anaconda.org/auto \
 # Install Python 2 packages
 RUN conda install --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
   'fiona' \
+  'folium' \
   'gdal' \
   'geocoder' \
   'geopandas' \
