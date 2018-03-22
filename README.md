@@ -3,16 +3,16 @@
 ![Docker stars](https://img.shields.io/docker/stars/urbica/gis-notebook.svg)
 [![Metadata](https://images.microbadger.com/badges/image/urbica/gis-notebook.svg)](https://microbadger.com/images/urbica/gis-notebook)
 
-# Jupyter Notebook Python GIS Stack
+# Urbica Jupyter Notebook Python GIS Stack
 
 This image is based on [Jupyter Notebook Scientific Python Stack](https://github.com/jupyter/docker-stacks/tree/master/scipy-notebook).
 
 ## What it Gives You
 
-* Jupyter Notebook 4.3.x
-* Conda Python 3.x and Python 2.7.x environments
+* Jupyter Notebook 5.2.x
+* Conda Python 3.x environment
 * pandas, matplotlib, scipy, seaborn, scikit-learn, scikit-image, sympy, cython, patsy, statsmodel, cloudpickle, dill, numba, bokeh, vincent, beautifulsoup, xlrd pre-installed
-* fiona, folium, gdal, geocoder, geopandas, geopy, googlemaps, psycopg2, pyproj, pysal, rtree, shapely pre-installed
+* **fiona, folium, gdal, geocoder, geopandas, geopy, googlemaps, psycopg2, pyproj, pysal, rtree, shapely pre-installed**
 * Unprivileged user `jovyan` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/jovyan` and `/opt/conda`
 * [tini](https://github.com/krallin/tini) as the container entrypoint and [start-notebook.sh](../base-notebook/start-notebook.sh) as the default command
 * A [start-singleuser.sh](../base-notebook/start-singleuser.sh) script useful for running a single-user instance of the Notebook server, as required by JupyterHub
@@ -31,7 +31,7 @@ Take note of the authentication token included in the notebook startup log messa
 
 ## Notebook Options
 
-The Docker container executes a [`start-notebook.sh` script](../base-notebook/start-notebook.sh) script by default. The `start-notebook.sh` script handles the `NB_UID` and `GRANT_SUDO` features documented in the next section, and then executes the `jupyter notebook`.
+The Docker container executes a [`start-notebook.sh` script](../base-notebook/start-notebook.sh) script by default. The `start-notebook.sh` script handles the `NB_UID`, `NB_GID` and `GRANT_SUDO` features documented in the next section, and then executes the `jupyter notebook`.
 
 You can pass [Jupyter command line options](https://jupyter.readthedocs.io/en/latest/projects/jupyter-command.html) through the `start-notebook.sh` script when launching the container. For example, to secure the Notebook server with a custom password hashed using `IPython.lib.passwd()` instead of the default token, run the following:
 
@@ -51,8 +51,7 @@ For example, to disable all authentication mechanisms (not a recommended practic
 docker run -d -p 8888:8888 urbica/gis-notebook start-notebook.sh --NotebookApp.token=''
 ```
 
-You can sidestep the `start-notebook.sh` script and run your own commands in the container. See the *Alternative Commands* section later in this document for more information.
-
+You can sidestep the `start-notebook.sh` script and run your own commands in the container. See the _Alternative Commands_ section later in this document for more information.
 
 ## Docker Options
 
@@ -60,8 +59,9 @@ You may customize the execution of the Docker container and the Notebook server 
 
 * `-e GEN_CERT=yes` - Generates a self-signed SSL certificate and configures Jupyter Notebook to use it to accept encrypted HTTPS connections.
 * `-e NB_UID=1000` - Specify the uid of the `jovyan` user. Useful to mount host volumes with specific file ownership. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su jovyan` after adjusting the user id.)
+* `-e NB_GID=100` - Specify the gid of the `jovyan` user. Useful to mount host volumes with specific file ownership. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su jovyan` after adjusting the group id.)
 * `-e GRANT_SUDO=yes` - Gives the `jovyan` user passwordless `sudo` capability. Useful for installing OS packages. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su jovyan` after adding `jovyan` to sudoers.) **You should only enable `sudo` if you trust the user or if the container is running on an isolated host.**
-* `-v /some/host/folder/for/work:/home/jovyan/work` - Host mounts the default working directory on the host to preserve work even when the container is destroyed and recreated (e.g., during an upgrade).
+* `-v /some/host/folder/for/work:/home/jovyan/work` - Mounts a host machine directory as folder in the container. Useful when you want to preserve notebooks and other work even after the container is destroyed. **You must grant the within-container notebook user or group (`NB_UID` or `NB_GID`) write access to the host directory (e.g., `sudo chown 1000 /some/host/folder/for/work`).**
 
 ## SSL Certificates
 
@@ -94,45 +94,17 @@ For additional information about using SSL, see the following:
 
 ## Conda Environments
 
-The default Python 3.x [Conda environment](http://conda.pydata.org/docs/using/envs.html) resides in `/opt/conda`. A second Python 2.x Conda environment exists in `/opt/conda/envs/python2`. You can [switch to the python2 environment](http://conda.pydata.org/docs/using/envs.html#change-environments-activate-deactivate) in a shell by entering the following:
+The default Python 3.x [Conda environment](http://conda.pydata.org/docs/using/envs.html) resides in `/opt/conda`.
+
+The commands `jupyter`, `ipython`, `python`, `pip`, and `conda` (among others) are available in both environments. For convenience, you can install packages into either environment regardless of what environment is currently active using commands like the following:
 
 ```
-source activate python2
-```
-
-You can return to the default environment with this command:
-
-```
-source deactivate
-```
-
-The commands `jupyter`, `ipython`, `python`, `pip`, `easy_install`, and `conda` (among others) are available in both environments. For convenience, you can install packages into either environment regardless of what environment is currently active using commands like the following:
-
-```
-# install a package into the python2 environment
-pip2 install some-package
-conda install -n python2 some-package
-
 # install a package into the default (python 3.x) environment
-pip3 install some-package
-conda install -n python3 some-package
+pip install some-package
+conda install some-package
 ```
 
 ## Alternative Commands
-
-### start-singleuser.sh
-
-[JupyterHub](https://jupyterhub.readthedocs.io) requires a single-user instance of the Jupyter Notebook server per user.   To use this stack with JupyterHub and [DockerSpawner](https://github.com/jupyter/dockerspawner), you must specify the container image name and override the default container run command in your `jupyterhub_config.py`:
-
-```python
-# Spawn user containers from this image
-c.DockerSpawner.container_image = 'urbica/gis-notebook'
-
-# Have the Spawner override the Docker run command
-c.DockerSpawner.extra_create_kwargs.update({
-	'command': '/usr/local/bin/start-singleuser.sh'
-})
-```
 
 ### start.sh
 
@@ -142,7 +114,13 @@ The `start.sh` script supports the same features as the default `start-notebook.
 docker run -it --rm urbica/gis-notebook start.sh ipython
 ```
 
-This script is particularly useful when you derive a new Dockerfile from this image and install additional Jupyter applications with subcommands like `jupyter console`, `jupyter kernelgateway`, and `jupyter lab`.
+Or, to run JupyterLab instead of the classic notebook, run the following:
+
+```
+docker run -it --rm -p 8888:8888 urbica/gis-notebook start.sh jupyter lab
+```
+
+This script is particularly useful when you derive a new Dockerfile from this image and install additional Jupyter applications with subcommands like `jupyter console`, `jupyter kernelgateway`, etc.
 
 ### Others
 
