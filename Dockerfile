@@ -9,7 +9,7 @@ RUN apt-get -yqq update \
 
 USER $NB_UID
 
-# Install Python 3 packages
+# Install Python 3 GIS packages
 RUN conda install --quiet --yes \
   'fiona' \
   'folium' \
@@ -24,3 +24,11 @@ RUN conda install --quiet --yes \
   'rtree' \
   'shapely' \
   'tqdm'
+
+# Install Tensorflow
+RUN conda install --quiet --yes \
+    'tensorflow=1.3*' \
+    'keras=2.0*' && \
+    conda clean -tipsy && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
